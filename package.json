@@ -1,0 +1,23 @@
+{
+  "name": "sqwertyl.me",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "buildcss": "tailwindcss build -i src/styles.css -o public/styles.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sqwertyl/sqwertyl.me.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sqwertyl/sqwertyl.me/issues"
+  },
+  "homepage": "https://github.com/sqwertyl/sqwertyl.me#readme",
+  "dependencies": {
+    "tailwindcss": "^3.2.4"
+  }
+}
