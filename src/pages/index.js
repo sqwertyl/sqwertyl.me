@@ -65,13 +65,13 @@ const App = () => {
         <title>@sqwertyl</title>
         <link rel="icon" type="image/png" href="favicon.png"/>
       </Head>
-    <div className={`min-h-screen flex items-center fade-in`} style={{backgroundImage:"url('bg.svg')", backgroundPosition:`${bgPosition.x}px ${bgPosition.y}px`}}>
-    <div className="container mx-auto px-4 flex flex-col items-center">
-      <div className={`mb-10 opacity-0`} id="profilePicture">
-        <img id="profileImage" src="pfp.png" alt="Profile picture" className={`profile-picture rounded-full w-56 h-56`} draggable={false} />
-      </div>
-      <div className={`text-center opacity-0 content`} id="content">
-      <h1 className={`text-5xl font-bold mb-2`}>{nameElements}</h1>
+      <div className={`min-h-screen flex items-center fade-in`} style={{backgroundImage:"url('bg.svg')", backgroundPosition:`${bgPosition.x}px ${bgPosition.y}px`}}>
+        <div className="container mx-auto px-4 flex flex-col items-center">
+        <div className={`mb-10 opacity-0`} id="profilePicture">
+          <img id="profileImage" src="pfp.png" alt="Profile picture" className={`profile-picture rounded-full w-56 h-56`} draggable={false} />
+        </div>
+        <div className={`text-center opacity-0 content`} id="content">
+          <h1 className={`text-5xl font-bold mb-2`}>{nameElements}</h1>
           <div className="relative group">
             <div className="inline-block" id="captionContainer">
               <p className={`text-2xl caption-text`} style={fira.style}>@sqwertyl</p>
@@ -87,9 +87,9 @@ const App = () => {
               <span className={`absolute top-0 left-0 right-0 mx-auto w-full h-0 -mt-2 border-4 opacity-0`}></span>
             </div>
           </div>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 
