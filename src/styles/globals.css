@@ -9,7 +9,7 @@
 }
 
 .slideIn {
-  animation: slideIn 0.5s ease-out;
+    animation: slideIn 0.5s ease-out;
 }
 .slideInModal {
     animation: slideInModal 0.1s ease-out;
@@ -38,17 +38,17 @@
 }
 
 @keyframes caption-hop {
-    0%, 60%, 68%, 70%, 78%, 80%, 88%, 90%, 98%, 100% {
+    0%, 40%, 48%, 50%, 58%, 60%, 68%, 70%, 78%, 100% {
         transform: translateY(0);
         color: #718096
     }
-    62%, 66%, 72%, 76% {
+    42%, 46%, 52%, 56% {
         transform: rotateZ(3deg);
     }
-    64%, 74%{
+    44%, 54%{
         transform: translateY(-0.3rem) rotateZ(-3deg);
     }
-    84%, 94% {
+    64%, 74% {
         transform: scale(0.93);
         color: rgb(156, 91, 202);
         
@@ -84,17 +84,24 @@
 
 
 .caption-text {
-    font-weight: 500;
+    /* font-weight: 500; */
     color: #718096; /* Tailwind CSS 'gray-600' color */
-}
-
-.caption-text:not(:hover) { 
-    animation: caption-hop 5s infinite;
+    transform: scale(1);
+    transition: transform 0.1s;
+    animation: caption-hop 4s infinite;
 }
 
 .caption-text:hover {
     animation: none;
+    /* transform: scale(0.96); */
+    transition: all 0.1s;
+    /* color: rgb(156, 91, 202); */
+}
+
+.caption-text-clicked {
     color: rgb(156, 91, 202);
+    transform: scale(0.93);
+    transition: transform 0.1s;
 }
 
 .profile-picture {
@@ -112,7 +119,7 @@
     justify-content: space-around;
     align-items: center;
     pointer-events: none;
-    transform: translate(0, 3px);
+    transform: translate(0, 4px);
     opacity: 0;
     transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
     top: 120%;
@@ -123,6 +130,15 @@
     pointer-events: auto;
     transform: translate(0, 0);
     opacity: 1;
+    animation: none;
+}
+
+.social-modal-clicked {
+    pointer-events: auto;
+    transform: translate(0, 0) scale(1.1) !important;
+    transition: transform 0.1s !important;
+    opacity: 1;
+    animation: none;
 }
 
 html { height:100%; overflow:hidden; }
