@@ -10,7 +10,7 @@ let basePath = '';
 
 if (isGithubActions) {
   const repo = 'sqwertyl.me'
-  repo = process.env.GITHUB_REPOSITORY.replace(/.*?\//, '')
+  // repo = process.env.GITHUB_REPOSITORY.replace(/.*?\//, '')
   assetPrefix = `/${repo}`
   basePath = `/${repo}`
 }
