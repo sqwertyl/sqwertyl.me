@@ -91,10 +91,14 @@
     animation: caption-hop 4s infinite;
 }
 
+.caption-text::after {
+    content: "➜";
+    visibility: visible;
+}
+
 .caption-text:hover {
     animation: none;
-    /* transform: scale(0.96); */
-    transition: all 0.1s;
+    transform: scale(0.96);
     /* color: rgb(156, 91, 202); */
 }
 
