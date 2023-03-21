@@ -44,10 +44,6 @@ const App = () => {
       captionText.classList.toggle("caption-text");
       captionText.classList.toggle("caption-text-clicked");
       socialModal.classList.toggle("social-modal-clicked");
-      if (captionText.classList.contains("caption-text")) {
-        socialModal.style.transform.concat(" scale(1.1)");
-      }
-
     });
 
   }, []);
