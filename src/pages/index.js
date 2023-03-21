@@ -46,6 +46,18 @@ const App = () => {
       socialModal.classList.toggle("social-modal-clicked");
     });
 
+    // close social modal when clicking outside of it but don't activate it
+    document.addEventListener("click", (event) => {
+      if (event.target.id !== "captionText" && event.target.id !== "socialModal" 
+        && event.target.id !== "socialLink") {
+        captionText.classList.remove("caption-text-clicked");
+        captionText.classList.add("caption-text");
+        socialModal.classList.remove("social-modal-clicked");
+      }
+    });
+    
+
+
   }, []);
 
   // hopping name
@@ -85,11 +97,10 @@ const App = () => {
                 <p className={`text-2xl font-medium cursor-pointer caption-text`} style={fira.style} id="captionText">@sqwertyl</p>
               </div>
               <div className={`social-modal top-200 left-1/4 absolute w-1/2 h-14`} id='socialModal'>
-                {/* Add your social icons here */}
-                <a href="https://github.com/sqwertyl" target="_blank" rel="noopener noreferrer" className="social-link">
+                <a href="https://github.com/sqwertyl" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
                   <FontAwesomeIcon icon={faGithub} size="lg" />
                 </a>
-                <a href="https://linkedin.com/in/andrewchen118" target="_blank" rel="noopener noreferrer" className="social-link">
+                <a href="https://linkedin.com/in/andrewchen118" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
                   <FontAwesomeIcon icon={faLinkedin} size="lg" />
                 </a>
                 <span className={`absolute top-0 left-0 right-0 mx-auto w-full h-0 -mt-2 border-4 opacity-0`}></span>
