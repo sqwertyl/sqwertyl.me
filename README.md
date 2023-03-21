@@ -1,9 +1,7 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+My personal [Next.js](https://nextjs.org/) site project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). Uses JS and TailwindCSS. Icons from FontAwesome.
 
-## Getting Started
 
-First, run the development server:
-
+### Running Locally
 ```bash
 npm run dev
 # or
@@ -12,4 +10,4 @@ yarn dev
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
