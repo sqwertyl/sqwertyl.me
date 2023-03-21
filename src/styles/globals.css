@@ -84,7 +84,6 @@
 
 
 .caption-text {
-    /* font-weight: 500; */
     color: #718096; /* Tailwind CSS 'gray-600' color */
     transform: scale(1);
     transition: transform 0.1s;
@@ -93,13 +92,11 @@
 
 .caption-text::after {
     content: "➜";
-    visibility: visible;
 }
 
 .caption-text:hover {
     animation: none;
     transform: scale(0.96);
-    /* color: rgb(156, 91, 202); */
 }
 
 .caption-text-clicked {

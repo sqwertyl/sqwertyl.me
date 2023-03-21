@@ -6,10 +6,9 @@ import { config, library } from '@fortawesome/fontawesome-svg-core'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import '@fortawesome/fontawesome-svg-core/styles.css'
-// config.autoAddCss = false;
 
+// add github icon to library
 library.add(faGithub);
-
 
 const fira = Fira_Code({ subsets: ['latin'] })
 
@@ -48,13 +47,8 @@ const App = () => {
       if (captionText.classList.contains("caption-text")) {
         socialModal.style.transform.concat(" scale(1.1)");
       }
-      
+
     });
-
-    // socialModal.addEventListener("mouseenter", () => {
-    //   socialModal.style.transform = `scale(1.1)`;
-    // });
-
 
   }, []);
 
