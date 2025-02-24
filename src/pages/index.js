@@ -6,9 +6,10 @@ import { config, library } from '@fortawesome/fontawesome-svg-core'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
 
 // add github icon to library
-library.add(faGithub);
+library.add(faGithub, faFileAlt, faLinkedin);
 
 const fira = Fira_Code({ subsets: ['latin'] })
 
@@ -64,7 +65,7 @@ const App = () => {
 
     // close social modal when clicking outside of it but don't activate it
     document.addEventListener("click", (event) => {
-      if (event.target.id !== "captionText" && event.target.id !== "socialModal" 
+      if (event.target.id !== "captionText" && event.target.id !== "socialModal"
         && event.target.id !== "socialLink") {
         captionText.classList.remove("caption-text-clicked");
         captionText.classList.add("caption-text");
@@ -138,12 +139,21 @@ const App = () => {
                 <p className={`text-2xl font-medium cursor-pointer caption-text`} style={fira.style} id="captionText">@links</p>
               </div>
               <div className={`social-modal top-200 left-1/4 absolute w-1/2 h-14`} id='socialModal'>
-                <a href="https://github.com/sqwertyl" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
+                {/* <a href="https://github.com/sqwertyl" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
                   <FontAwesomeIcon icon={faGithub} size="xl" />
-                </a>
-                <a href="https://linkedin.com/in/andrewchen118" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
-                  <FontAwesomeIcon icon={faLinkedin} size="xl" />
-                </a>
+                </a> */}
+                <div className="icon-container">
+                  <a href="https://linkedin.com/in/andrewchen118" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
+                    <FontAwesomeIcon icon={faLinkedin} size="xl" />
+                    <span className="link-label">LinkedIn</span>
+                  </a>
+                </div>
+                <div className="icon-container">
+                  <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
+                    <FontAwesomeIcon icon={faFileAlt} size="xl" />
+                    <span className="link-label">Resume</span>
+                  </a>
+                </div>
                 <span className={`absolute top-0 left-0 right-0 mx-auto w-full h-0 -mt-2 border-4 opacity-0`}></span>
               </div>
             </div>

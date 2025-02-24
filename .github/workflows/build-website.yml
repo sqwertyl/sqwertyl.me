@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Build and Deploy
 
 on:
   push:
@@ -12,24 +12,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          # update the Node version to meet your needs
-          node-version: 23
+          node-version: 20
           cache: npm
 
-      - name: Build
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and Export
         run: |
-          npm ci
           npm run build
-          npm run export
+          # Ensure the out directory exists and contains all static files
+          ls -la out/
           touch out/.nojekyll
 
       - name: Deploy
-        # https://github.com/JamesIves/github-pages-deploy-action
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: out
-      
+          clean: true # Automatically remove deleted files from the deployment
