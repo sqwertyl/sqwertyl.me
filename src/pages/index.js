@@ -130,7 +130,7 @@ const App = () => {
       <div className={`min-h-screen flex items-center fade-in`} style={{ backgroundImage: "url('bg.svg')", backgroundPosition: `${bgPosition.x}px ${bgPosition.y}px` }}>
         <div className="container mx-auto px-4 flex flex-col items-center">
           <div className={`mb-10 opacity-0`} id="profilePicture">
-            <img id="profileImage" src="pfp.svg" alt="Profile picture" className={`profile-picture rounded-full w-56 h-56 cursor-pointer`} draggable={false} />
+            <img id="profileImage" src="pfp.jpeg" alt="Profile picture" className={`profile-picture rounded-full w-56 h-56 cursor-pointer`} draggable={false} />
           </div>
           <div className={`text-center opacity-0 content`} id="content">
             <h1 className={`text-5xl font-bold mb-2`}>{nameElements}</h1>
