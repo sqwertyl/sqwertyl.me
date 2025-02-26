@@ -85,6 +85,7 @@ const App = () => {
       emoji.style.top = randomTop + "px";
       emoji.style.fontSize = "2rem";
       emoji.style.opacity = "1";
+      emoji.style.pointerEvents = "none";
       document.body.appendChild(emoji);
 
       // delay a bit then animate upward and fade out
