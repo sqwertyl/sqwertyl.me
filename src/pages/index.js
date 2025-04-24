@@ -1,106 +1,111 @@
 import Head from 'next/head'
-// import Image from 'next/image'
+import Image from 'next/image'
 import { Fira_Code } from 'next/font/google'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { config, library } from '@fortawesome/fontawesome-svg-core'
-import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
+import useOnClickOutside from '@/hooks/useOnClickOutside'
+import useTilt from '@/hooks/useTilt'
 
-// add github icon to library
-library.add(faGithub, faFileAlt, faLinkedin);
+// add selected icons to library
+library.add(faFileAlt, faLinkedin);
+
+// Floating emoji component
+const Emoji = ({ id, left, top, onDone }) => {
+  const [style, setStyle] = useState({
+    position: 'absolute',
+    left,
+    top,
+    fontSize: '2rem',
+    opacity: 1,
+    transition: 'top 3s ease-out, opacity 3s ease-out'
+  });
+  useEffect(() => {
+    const t1 = setTimeout(() => {
+      setStyle(s => ({ ...s, top: s.top - 100, opacity: 0 }));
+    }, 10);
+    const t2 = setTimeout(() => {
+      onDone(id);
+    }, 3010);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [id, onDone]);
+  return <span style={style}>👍</span>;
+};
 
 const fira = Fira_Code({ subsets: ['latin'] })
 
 const App = () => {
+  // background parallax position
   const [bgPosition, setBgPosition] = useState({ x: 0, y: 0 });
+  // control slide-in for profile and content
+  const [showProfile, setShowProfile] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+  // social modal open
+  const [modalOpen, setModalOpen] = useState(false);
+  // floating emojis
+  const [emojis, setEmojis] = useState([]);
+  // refs
+  const modalRef = useRef(null);
+  const tiltRef = useRef(null);
 
+  // clean up clicks outside social modal
+  useOnClickOutside(modalRef, () => setModalOpen(false));
+  // tilt effect on profile image
+  useTilt(tiltRef);
+
+  // initial slide-in
   useEffect(() => {
-    // slide in effect
-    const profilePicture = document.getElementById("profilePicture");
-    const content = document.getElementById("content");
-    setTimeout(() => {
-      content.classList.add("opacity-100", "slideIn");
-      profilePicture.classList.add("opacity-100", "slideIn");
+    const t = setTimeout(() => {
+      setShowProfile(true);
+      setShowContent(true);
     }, 100);
+    return () => clearTimeout(t);
+  }, []);
 
-    // perspective shifting with easing
-    const profileImage = document.getElementById("profileImage");
-    let targetX = 0,
-      targetY = 0;
-    let currentX = 0,
-      currentY = 0;
-    const easingFactor = 0.25;
-
-    const isMobileDevice = window.matchMedia("(max-width: 767px)").matches;
-    if (!isMobileDevice) {
-      window.addEventListener("mousemove", (event) => {
-        const x =
-          ((event.clientX - window.innerWidth / 2) / window.innerWidth) * 40;
-        const y = (event.clientY / window.innerHeight) * 40 - 25;
-        targetX = x;
-        targetY = y;
-        setBgPosition({ x: x / 3, y: y / 3 });
-      });
-
-      const animate = () => {
-        currentX += (targetX - currentX) * easingFactor;
-        currentY += (targetY - currentY) * easingFactor;
-        profileImage.style.transform = `perspective(600px) rotateX(${-currentY}deg) rotateY(${currentX}deg)`;
-        requestAnimationFrame(animate);
-      };
-
-      animate();
-    }
-
-    // create on click event for the caption text
-    const captionText = document.getElementById("captionText");
-    const socialModal = document.getElementById("socialModal");
-    captionText.addEventListener("click", () => {
-      captionText.classList.toggle("caption-text");
-      captionText.classList.toggle("caption-text-clicked");
-      socialModal.classList.toggle("social-modal-clicked");
-    });
-
-    // close social modal when clicking outside of it but don't activate it
-    document.addEventListener("click", (event) => {
-      if (event.target.id !== "captionText" && event.target.id !== "socialModal"
-        && event.target.id !== "socialLink") {
-        captionText.classList.remove("caption-text-clicked");
-        captionText.classList.add("caption-text");
-        socialModal.classList.remove("social-modal-clicked");
+  // background parallax mouse movement
+  useEffect(() => {
+    let targetX = 0, targetY = 0;
+    let ticking = false;
+    const onMouseMove = event => {
+      const x = ((event.clientX - window.innerWidth / 2) / window.innerWidth) * 40;
+      const y = (event.clientY / window.innerHeight) * 40 - 25;
+      targetX = x;
+      targetY = y;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setBgPosition({ x: targetX / 3, y: targetY / 3 });
+          ticking = false;
+        });
+        ticking = true;
       }
-    });
+    };
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (!isMobile) {
+      window.addEventListener("mousemove", onMouseMove);
+    }
+    return () => {
+      if (!isMobile) {
+        window.removeEventListener("mousemove", onMouseMove);
+      }
+    };
+  }, []);
 
-    // floating thumbs up emoji on clicking the profile image
-    profileImage.addEventListener("click", () => {
-      const emoji = document.createElement("span");
-      emoji.innerText = "👍";
-      emoji.style.position = "absolute";
-      // randomize initial position
-      const randomLeft = Math.random() * (window.innerWidth - 50);
-      const randomTop = Math.random() * (window.innerHeight - 50);
-      emoji.style.left = randomLeft + "px";
-      emoji.style.top = randomTop + "px";
-      emoji.style.fontSize = "2rem";
-      emoji.style.opacity = "1";
-      emoji.style.pointerEvents = "none";
-      document.body.appendChild(emoji);
-
-      // delay a bit then animate upward and fade out
-      setTimeout(() => {
-        emoji.style.transition = "all 3s ease-out";
-        emoji.style.top = (randomTop - 100) + "px";
-        emoji.style.opacity = "0";
-      }, 10);
-
-      // remove the emoji after animation
-      setTimeout(() => {
-        document.body.removeChild(emoji);
-      }, 3010);
-    });
-
+  // handle profile image click to add emoji
+  const handleProfileClick = useCallback(() => {
+    const id = Date.now();
+    const left = Math.random() * (window.innerWidth - 50);
+    const top = Math.random() * (window.innerHeight - 50);
+    setEmojis(prev => [...prev, { id, left, top }]);
+  }, []);
+  // remove emoji by id
+  const removeEmoji = useCallback((id) => {
+    setEmojis(prev => prev.filter(e => e.id !== id));
   }, []);
 
   // hopping name
@@ -128,38 +133,65 @@ const App = () => {
         <title>@sqwertyl</title>
         <link rel="icon" type="image/png" href="favicon.png" />
       </Head>
-      <div className={`min-h-screen flex items-center fade-in`} style={{ backgroundImage: "url('bg.svg')", backgroundPosition: `${bgPosition.x}px ${bgPosition.y}px` }}>
+      <div
+        className="min-h-screen flex items-center fade-in"
+        style={{
+          backgroundImage: "url('bg.svg')",
+          backgroundPosition: `${bgPosition.x}px ${bgPosition.y}px`
+        }}
+      >
         <div className="container mx-auto px-4 flex flex-col items-center">
-          <div className={`mb-10 opacity-0`} id="profilePicture">
-            <img id="profileImage" src="pfp.jpeg" alt="Profile picture" className={`profile-picture rounded-full w-56 h-56 cursor-pointer`} draggable={false} />
+          <div className={`${showProfile ? 'opacity-100 slideIn mb-10' : 'opacity-0 mb-10'}`}>
+            <div ref={tiltRef} onClick={handleProfileClick} className="inline-block cursor-pointer">
+              <Image
+                src="/pfp.jpeg"
+                alt="Profile picture"
+                width={224}
+                height={224}
+                className="profile-picture rounded-full w-56 h-56"
+                draggable={false}
+              />
+            </div>
           </div>
-          <div className={`text-center opacity-0 content`} id="content">
-            <h1 className={`text-5xl font-bold mb-2`}>{nameElements}</h1>
-            <div className="relative group">
-              <div className="inline-block" id="captionContainer">
-                <p className={`text-2xl font-medium cursor-pointer caption-text`} style={fira.style} id="captionText">@links</p>
-              </div>
-              <div className={`social-modal top-200 left-1/4 absolute w-1/2 h-14`} id='socialModal'>
-                {/* <a href="https://github.com/sqwertyl" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
-                  <FontAwesomeIcon icon={faGithub} size="xl" />
-                </a> */}
+          <div className={`text-center ${showContent ? 'opacity-100 slideIn' : 'opacity-0'}`}>
+            <h1 className="text-5xl font-bold mb-2">{nameElements}</h1>
+            <div className="relative" ref={modalRef}>
+              <p
+                role="button"
+                tabIndex={0}
+                aria-label="Toggle social links"
+                onClick={() => setModalOpen(o => !o)}
+                onKeyDown={e => e.key === 'Enter' && setModalOpen(o => !o)}
+                className={`inline-block select-none px-4 text-2xl font-medium cursor-pointer ${
+                  modalOpen ? 'caption-text-clicked' : 'caption-text'
+                }`}
+                style={fira.style}
+              >
+                @links
+              </p>
+              <div
+                className={`social-modal absolute left-1/4 w-1/2 h-14 ${modalOpen ? 'social-modal-clicked' : 'select-none'}`}
+              >
                 <div className="icon-container">
-                  <a href="https://linkedin.com/in/andrewchen118" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
+                  <a href="https://linkedin.com/in/andrewchen118" target="_blank" rel="noopener noreferrer" className="social-link">
                     <FontAwesomeIcon icon={faLinkedin} size="xl" />
                     <span className="link-label">LinkedIn</span>
                   </a>
                 </div>
                 <div className="icon-container">
-                  <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="social-link" id="socialLink">
+                  <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="social-link">
                     <FontAwesomeIcon icon={faFileAlt} size="xl" />
                     <span className="link-label">Resume</span>
                   </a>
                 </div>
-                <span className={`absolute top-0 left-0 right-0 mx-auto w-full h-0 -mt-2 border-4 opacity-0`}></span>
+                <span className="absolute top-0 left-0 right-0 mx-auto w-full h-0 -mt-2 border-4 opacity-0" />
               </div>
             </div>
           </div>
         </div>
+        {emojis.map(e => (
+          <Emoji key={e.id} id={e.id} left={e.left} top={e.top} onDone={removeEmoji} />
+        ))}
       </div>
     </div>
   );
