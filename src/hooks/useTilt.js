@@ -20,8 +20,11 @@ export default function useTilt(
 
     const onPointerMove = event => {
       if (event.pointerType && event.pointerType !== 'mouse') return
-      targetX = ((event.clientX - window.innerWidth / 2) / window.innerWidth) * 40
-      targetY = (event.clientY / window.innerHeight) * 40 - 25
+      const rect = el.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+      targetX = ((event.clientX - centerX) / window.innerWidth) * 40
+      targetY = ((event.clientY - centerY) / window.innerHeight) * 40
       // Cancel any in-progress reset and transition
       if (resetTimeoutId !== null) {
         clearTimeout(resetTimeoutId)

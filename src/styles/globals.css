@@ -94,8 +94,9 @@
     color: #718096;
     transform: scale(1);
     translate: 0 0;
-    transition: transform 0.1s ease, translate 0.1s ease;
+    transition: transform 0.12s ease, translate 0.12s ease;
     animation: caption-hop 4s infinite;
+    will-change: transform, translate;
 }
 
 .caption-inner::after {
@@ -106,6 +107,7 @@
     display: inline-block;
     transform: scale(1);
     transition: transform 120ms ease;
+    will-change: transform;
 }
 
 .caption-text:hover .caption-inner {
@@ -135,7 +137,7 @@
 }
 
 .profile-picture:hover {
-    transform: scale(1.03);
+    transform: scale(1.015);
     transition: transform 100ms ease;
 }
 

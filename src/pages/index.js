@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import useOnClickOutside from '@/hooks/useOnClickOutside'
 import useTilt from '@/hooks/useTilt'
+import useMagneticHover from '@/hooks/useMagneticHover'
+import useParallax from '@/hooks/useParallax'
 
 // Floating emoji component
 const Emoji = ({ id, left, top, onDone }) => {
@@ -37,7 +39,7 @@ const fira = Fira_Code({ subsets: ['latin'] })
 
 const App = () => {
   // background parallax position
-  const [bgPosition, setBgPosition] = useState({ x: 0, y: 0 });
+  const bgPosition = useParallax({ sensitivityX: 40, sensitivityY: 40, offsetY: -25, easing: 0.25, divideBy: 3 })
   // control slide-in for profile and content
   const [showProfile, setShowProfile] = useState(false);
   const [showContent, setShowContent] = useState(false);
@@ -49,6 +51,11 @@ const App = () => {
   // refs
   const modalRef = useRef(null);
   const tiltRef = useRef(null);
+  const captionRef = useRef(null);
+  const pfpRef = useRef(null);
+  // magnetic hover translations
+  const captionTranslate = useMagneticHover(captionRef, { maxPullX: 32, maxPullY: 16, easing: 0.8 });
+  const pfpTranslate = useMagneticHover(pfpRef, { maxPullX: 8, maxPullY: 8, easing: 0.12 });
 
   // clean up clicks outside social modal
   useOnClickOutside(modalRef, () => setModalOpen(false));
@@ -64,42 +71,6 @@ const App = () => {
     return () => clearTimeout(t);
   }, []);
 
-  // background parallax with eased smoothing (mouse-only)
-  useEffect(() => {
-    let targetX = 0, targetY = 0;
-    let currentX = 0, currentY = 0;
-    const easing = 0.25; // match tilt easing feel
-    let rafId = null;
-
-    const onPointerMove = (event) => {
-      if (event.pointerType && event.pointerType !== 'mouse') return;
-      const x = ((event.clientX - window.innerWidth / 2) / window.innerWidth) * 40;
-      const y = (event.clientY / window.innerHeight) * 40 - 25;
-      targetX = x;
-      targetY = y;
-    };
-
-    const animate = () => {
-      currentX += (targetX - currentX) * easing;
-      currentY += (targetY - currentY) * easing;
-      setBgPosition({ x: currentX / 3, y: currentY / 3 });
-      rafId = window.requestAnimationFrame(animate);
-    };
-
-    const isMouseLike = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (isMouseLike) {
-      window.addEventListener('pointermove', onPointerMove);
-      rafId = window.requestAnimationFrame(animate);
-    }
-    return () => {
-      if (isMouseLike) {
-        window.removeEventListener('pointermove', onPointerMove);
-      }
-      if (rafId) {
-        window.cancelAnimationFrame(rafId);
-      }
-    };
-  }, []);
 
   // handle profile image click to add emoji
   const handleProfileClick = useCallback(() => {
@@ -149,19 +120,23 @@ const App = () => {
           <div className={`${showProfile ? 'opacity-100 slideIn mb-10' : 'opacity-0 mb-10'}`}>
             <div
               ref={tiltRef}
-              onClick={handleProfileClick}
-              onPointerDown={() => setPfpPressed(true)}
-              onPointerUp={() => setPfpPressed(false)}
-              onPointerCancel={() => setPfpPressed(false)}
-              onPointerLeave={() => setPfpPressed(false)}
-              className="inline-block cursor-pointer select-none"
-            >
+              className="inline-block select-none"
+              style={{
+                translate: `${Math.round(pfpTranslate.x * 10) / 10}px ${Math.round(pfpTranslate.y * 10) / 10}px`
+              }}
+              >
               <Image
                 src="/pfp.jpeg"
                 alt="Profile picture"
                 width={224}
                 height={224}
-                className={`profile-picture rounded-full w-56 h-56 ${pfpPressed ? 'pfp-pressed' : ''}`}
+                ref={pfpRef}
+                onClick={handleProfileClick}
+                onPointerDown={() => setPfpPressed(true)}
+                onPointerUp={() => setPfpPressed(false)}
+                onPointerCancel={() => setPfpPressed(false)}
+                onPointerLeave={() => setPfpPressed(false)}
+                className={`profile-picture cursor-pointer rounded-full w-56 h-56 ${pfpPressed ? 'pfp-pressed' : ''}`}
                 draggable={false}
               />
             </div>
@@ -178,7 +153,11 @@ const App = () => {
                 className={`inline-block select-none px-4 text-2xl font-medium cursor-pointer ${
                   modalOpen ? 'caption-text-clicked' : 'caption-text'
                 }`}
-                style={fira.style}
+                ref={captionRef}
+                style={{
+                  ...fira.style,
+                  translate: !modalOpen ? `${Math.round(captionTranslate.x * 10) / 10}px ${Math.round(captionTranslate.y * 10) / 10}px` : undefined
+                }}
               >
                 <span className="caption-inner">@links</span>
               </p>
