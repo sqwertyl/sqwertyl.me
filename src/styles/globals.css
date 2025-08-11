@@ -12,7 +12,6 @@
     animation: slideIn 0.5s ease-out;
 }
 
-
 @keyframes slideIn {
     0% {
         transform: translateY(-2rem);
@@ -24,7 +23,6 @@
         opacity: 1;
     }
 }
-
 
 @keyframes caption-hop {
     0%,
@@ -95,35 +93,62 @@
 .caption-text {
     color: #718096;
     transform: scale(1);
-    transition: transform 0.1s;
+    translate: 0 0;
+    transition: transform 0.1s ease, translate 0.1s ease;
     animation: caption-hop 4s infinite;
 }
 
-.caption-text::after {
+.caption-inner::after {
     content: "➜";
 }
 
-.caption-text:hover {
-    animation: none;
-    transform: scale(0.96);
+.caption-inner {
+    display: inline-block;
+    transform: scale(1);
+    transition: transform 120ms ease;
+}
+
+.caption-text:hover .caption-inner {
+    transform: scale(1.05);
+}
+
+.caption-text-clicked .caption-inner::after {
+    content: none;
 }
 
 .caption-text-clicked {
     color: rgb(156, 91, 202);
-    transform: scale(0.93);
-    transition: transform 0.1s;
+    transform: scale(0.99);
+    translate: 0 -0.1rem;
+    transition: transform 0.1s ease, translate 0.1s ease;
 }
 
 .profile-picture {
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 100ms ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+}
+
+.profile-picture:hover {
+    transform: scale(1.03);
+    transition: transform 100ms ease;
+}
+
+.pfp-pressed {
+    transform: scale(1) !important;
 }
 
 /* Social modal styling */
 .social-modal {
     background-color: #f2f2f2;
     border-radius: 10px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1),
-        0px 0px 0px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.05);
     padding: 0.5rem;
     display: flex;
     justify-content: space-around;
@@ -132,10 +157,22 @@
     transform: translate(0, 4px);
     opacity: 0;
     transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-    top: 120%;
+    top: 140%;
 }
 
-.group:hover .social-modal,
+.social-modal::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: #f2f2f2;
+    border-left: 2px solid rgba(0, 0, 0, 0.05);
+    border-top: 2px solid rgba(0, 0, 0, 0.05);
+}
+
 .social-modal:hover {
     pointer-events: auto;
     transform: translate(0, 0);

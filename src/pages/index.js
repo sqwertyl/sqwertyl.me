@@ -1,17 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Fira_Code } from 'next/font/google'
-import { useEffect, useState, useRef, useCallback } from 'react'
-import { config, library } from '@fortawesome/fontawesome-svg-core'
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import '@fortawesome/fontawesome-svg-core/styles.css'
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import useOnClickOutside from '@/hooks/useOnClickOutside'
 import useTilt from '@/hooks/useTilt'
-
-// add selected icons to library
-library.add(faFileAlt, faLinkedin);
 
 // Floating emoji component
 const Emoji = ({ id, left, top, onDone }) => {
@@ -50,6 +45,7 @@ const App = () => {
   const [modalOpen, setModalOpen] = useState(false);
   // floating emojis
   const [emojis, setEmojis] = useState([]);
+  const [pfpPressed, setPfpPressed] = useState(false);
   // refs
   const modalRef = useRef(null);
   const tiltRef = useRef(null);
@@ -68,30 +64,39 @@ const App = () => {
     return () => clearTimeout(t);
   }, []);
 
-  // background parallax mouse movement
+  // background parallax with eased smoothing (mouse-only)
   useEffect(() => {
     let targetX = 0, targetY = 0;
-    let ticking = false;
-    const onMouseMove = event => {
+    let currentX = 0, currentY = 0;
+    const easing = 0.25; // match tilt easing feel
+    let rafId = null;
+
+    const onPointerMove = (event) => {
+      if (event.pointerType && event.pointerType !== 'mouse') return;
       const x = ((event.clientX - window.innerWidth / 2) / window.innerWidth) * 40;
       const y = (event.clientY / window.innerHeight) * 40 - 25;
       targetX = x;
       targetY = y;
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setBgPosition({ x: targetX / 3, y: targetY / 3 });
-          ticking = false;
-        });
-        ticking = true;
-      }
     };
-    const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    if (!isMobile) {
-      window.addEventListener("mousemove", onMouseMove);
+
+    const animate = () => {
+      currentX += (targetX - currentX) * easing;
+      currentY += (targetY - currentY) * easing;
+      setBgPosition({ x: currentX / 3, y: currentY / 3 });
+      rafId = window.requestAnimationFrame(animate);
+    };
+
+    const isMouseLike = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (isMouseLike) {
+      window.addEventListener('pointermove', onPointerMove);
+      rafId = window.requestAnimationFrame(animate);
     }
     return () => {
-      if (!isMobile) {
-        window.removeEventListener("mousemove", onMouseMove);
+      if (isMouseLike) {
+        window.removeEventListener('pointermove', onPointerMove);
+      }
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
       }
     };
   }, []);
@@ -110,8 +115,8 @@ const App = () => {
 
   // hopping name
   const name = "andrew chen";
-  const nameElements = name.split("").map((letter, index) => {
-    return (
+  const nameElements = useMemo(() => (
+    name.split("").map((letter, index) => (
       <span
         key={index}
         className={letter === " " ? "space" : "hop-animation"}
@@ -123,8 +128,8 @@ const App = () => {
       >
         {letter}
       </span>
-    );
-  });
+    ))
+  ), [name]);
 
 
   return (
@@ -142,13 +147,21 @@ const App = () => {
       >
         <div className="container mx-auto px-4 flex flex-col items-center">
           <div className={`${showProfile ? 'opacity-100 slideIn mb-10' : 'opacity-0 mb-10'}`}>
-            <div ref={tiltRef} onClick={handleProfileClick} className="inline-block cursor-pointer">
+            <div
+              ref={tiltRef}
+              onClick={handleProfileClick}
+              onPointerDown={() => setPfpPressed(true)}
+              onPointerUp={() => setPfpPressed(false)}
+              onPointerCancel={() => setPfpPressed(false)}
+              onPointerLeave={() => setPfpPressed(false)}
+              className="inline-block cursor-pointer select-none"
+            >
               <Image
                 src="/pfp.jpeg"
                 alt="Profile picture"
                 width={224}
                 height={224}
-                className="profile-picture rounded-full w-56 h-56"
+                className={`profile-picture rounded-full w-56 h-56 ${pfpPressed ? 'pfp-pressed' : ''}`}
                 draggable={false}
               />
             </div>
@@ -167,7 +180,7 @@ const App = () => {
                 }`}
                 style={fira.style}
               >
-                @links
+                <span className="caption-inner">@links</span>
               </p>
               <div
                 className={`social-modal absolute left-1/4 w-1/2 h-14 ${modalOpen ? 'social-modal-clicked' : 'select-none'}`}
@@ -184,7 +197,6 @@ const App = () => {
                     <span className="link-label">Resume</span>
                   </a>
                 </div>
-                <span className="absolute top-0 left-0 right-0 mx-auto w-full h-0 -mt-2 border-4 opacity-0" />
               </div>
             </div>
           </div>
