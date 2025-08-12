@@ -2,42 +2,51 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-}
-
 @utility social-link {
   @apply inline-block p-2 text-gray-600 hover:text-indigo-500 transition-all duration-200 ease-in-out;
 }
 
-@layer utilities {
-  :root {
-    --color-muted: #718096;
-    --color-accent: rgb(156, 91, 202);
-    --color-surface: #f2f2f2;
-    --color-surface-dark: #111213;
-    --color-border-light: rgba(0, 0, 0, 0.05);
-    --color-border-dark: rgba(255, 255, 255, 0.05);
-    --color-label-bg: #4a5568;
-    --shadow-elevation-1: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    --transition-fast: 100ms;
-    --transition-normal: 200ms;
-    --transition-slow: 300ms;
-  }
+@theme {
+  /* Design tokens */
+  --color-muted: #718096;
+  --color-accent: rgb(156, 91, 202);
+  --color-surface: #f2f2f2;
+  --color-surface-dark: #111213;
+  --color-border-light: rgba(0, 0, 0, 0.05);
+  --color-border-dark: rgba(255, 255, 255, 0.05);
+  --color-label-bg: #4a5568;
+  --shadow-elevation-1: 0px 10px 20px rgba(0, 0, 0, 0.1);
+  --transition-fast: 100ms;
+  --transition-normal: 200ms;
+  --transition-slow: 300ms;
+
+  /* animation shorthands */
+  --animate-slide-in: slide-in 0.5s;
+  --animate-fade-in: fade-in 0.5s;
+  --animate-name-hop: name-hop 10s ease-in-out infinite;
+  --animate-caption-hop: caption-hop 4s infinite;
+}
+
+@keyframes slide-in {
+  0% { transform: translateY(-1rem); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes name-hop {
+  0%, 50%, 53%, 100% { transform: translateY(0); }
+  51% { transform: translateY(-3px); }
+}
+
+@keyframes caption-hop {
+  0%, 40%, 48%, 50%, 58%, 60%, 68%, 70%, 78%, 100% { transform: translateY(0); color: var(--color-muted); }
+  42%, 46%, 52%, 56% { transform: rotateZ(3deg); }
+  44%, 54% { transform: translateY(-0.3rem) rotateZ(-3deg); }
+  64%, 74% { transform: scale(0.93); color: var(--color-accent); }
 }
 
 .dot-bg {
@@ -50,91 +59,8 @@
     --dot-color: rgba(255, 255, 255, 0.18);
 }
 
-/* Smooth theme color transitions when the helper class is present */
 .theme-transition, .theme-transition * {
     transition: color var(--transition-slow) ease, background-color var(--transition-slow) ease, border-color var(--transition-slow) ease, fill var(--transition-slow) ease, stroke var(--transition-slow) ease;
-}
-
-.slideIn {
-    animation: slideIn 0.5s ease-out;
-}
-
-@keyframes slideIn {
-    0% {
-        transform: translateY(-2rem);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes caption-hop {
-    0%,
-    40%,
-    48%,
-    50%,
-    58%,
-    60%,
-    68%,
-    70%,
-    78%,
-    100% {
-        transform: translateY(0);
-        color: var(--color-muted);
-    }
-
-    42%,
-    46%,
-    52%,
-    56% {
-        transform: rotateZ(3deg);
-    }
-
-    44%,
-    54% {
-        transform: translateY(-0.3rem) rotateZ(-3deg);
-    }
-
-    64%,
-    74% {
-        transform: scale(0.93);
-        color: var(--color-accent);
-    }
-}
-
-@keyframes name-hop {
-    0%,
-    50%,
-    53%,
-    100% {
-        transform: translateY(0);
-    }
-
-    51% {
-        transform: translateY(-3px);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease-out;
-}
-
-.hop-animation {
-    display: inline-block;
-    animation: name-hop 10s ease-in-out infinite;
 }
 
 .caption-text {
@@ -142,7 +68,6 @@
     transform: scale(1);
     translate: 0 0;
     transition: transform 0.12s ease, translate 0.12s ease;
-    animation: caption-hop 4s infinite;
     will-change: transform, translate;
 }
 
@@ -189,7 +114,6 @@
     transform: scale(1) !important;
 }
 
-/* Social modal styling */
 .social-modal {
     background-color: var(--color-surface);
     border-radius: 10px;

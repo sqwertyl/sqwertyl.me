@@ -102,7 +102,7 @@ export default function HomePage() {
       name.split('').map((letter, index) => (
         <span
           key={index}
-          className={letter === ' ' ? 'space' : 'hop-animation'}
+          className={letter === ' ' ? 'space' : 'inline-block animate-name-hop'}
           style={letter === ' ' ? { ...fira.style } : { animationDelay: `${index * 0.1}s`, ...fira.style }}
         >
           {letter}
@@ -114,13 +114,13 @@ export default function HomePage() {
   return (
     <div>
       <div
-        className="min-h-screen flex items-center fade-in dot-bg bg-white dark:bg-black"
+        className="min-h-screen flex items-center animate-fade-in dot-bg bg-white dark:bg-black"
         style={{
           backgroundPosition: `${bgPosition.x}px ${bgPosition.y}px`,
         }}
       >
         <div className="container mx-auto px-4 flex flex-col items-center">
-          <div className={`${showProfile ? 'opacity-100 slideIn mb-10' : 'opacity-0 mb-10'}`}>
+          <div className={`${showProfile ? 'opacity-100 animate-slide-in mb-10' : 'opacity-0 mb-10'}`}>
             <div
               ref={tiltRef}
               className="inline-block select-none"
@@ -144,7 +144,7 @@ export default function HomePage() {
               />
             </div>
           </div>
-          <div className={`text-center ${showContent ? 'opacity-100 slideIn' : 'opacity-0'}`}>
+          <div className={`text-center ${showContent ? 'opacity-100 animate-slide-in' : 'opacity-0'}`}>
             <h1 className="text-5xl font-bold mb-2 text-black dark:text-gray-200">{nameElements}</h1>
             <div className="relative" ref={modalRef}>
               <p
@@ -153,7 +153,7 @@ export default function HomePage() {
                 aria-label="Toggle social links"
                 onClick={() => setModalOpen((o) => !o)}
                 onKeyDown={(e) => e.key === 'Enter' && setModalOpen((o) => !o)}
-                className={`inline-block select-none px-4 text-2xl font-medium cursor-pointer ${modalOpen ? 'caption-text-clicked' : 'caption-text'}`}
+                className={`inline-block select-none px-4 text-2xl font-medium cursor-pointer ${modalOpen ? 'caption-text-clicked' : 'caption-text'} ${!modalOpen ? 'animate-caption-hop' : ''}`}
                 ref={captionRef}
                 style={{
                   ...fira.style,
