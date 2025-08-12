@@ -4,7 +4,7 @@ import { Fira_Code } from 'next/font/google'
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
+import { faFileAlt, faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import useOnClickOutside from '@/hooks/useOnClickOutside'
 import useTilt from '@/hooks/useTilt'
 import useMagneticHover from '@/hooks/useMagneticHover'
@@ -48,14 +48,17 @@ const App = () => {
   // floating emojis
   const [emojis, setEmojis] = useState([]);
   const [pfpPressed, setPfpPressed] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   // refs
   const modalRef = useRef(null);
   const tiltRef = useRef(null);
   const captionRef = useRef(null);
   const pfpRef = useRef(null);
+  const themeRef = useRef(null);
   // magnetic hover translations
   const captionTranslate = useMagneticHover(captionRef, { maxPullX: 32, maxPullY: 16, easing: 0.8 });
   const pfpTranslate = useMagneticHover(pfpRef, { maxPullX: 8, maxPullY: 8, easing: 0.12 });
+  const themeTranslate = useMagneticHover(themeRef, { maxPullX: 6, maxPullY: 6, easing: 0.12 });
 
   // clean up clicks outside social modal
   useOnClickOutside(modalRef, () => setModalOpen(false));
@@ -71,6 +74,13 @@ const App = () => {
     return () => clearTimeout(t);
   }, []);
 
+  // sync theme state from current DOM on mount
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    }
+  }, []);
+
 
   // handle profile image click to add emoji
   const handleProfileClick = useCallback(() => {
@@ -82,6 +92,18 @@ const App = () => {
   // remove emoji by id
   const removeEmoji = useCallback((id) => {
     setEmojis(prev => prev.filter(e => e.id !== id));
+  }, []);
+
+  // theme toggle
+  const toggleTheme = useCallback(() => {
+    const root = document.documentElement;
+    const next = !root.classList.contains('dark');
+    root.classList.add('theme-transition');
+    root.classList.toggle('dark', next);
+    setIsDark(next);
+    window.setTimeout(() => {
+      root.classList.remove('theme-transition');
+    }, 320);
   }, []);
 
   // hopping name
@@ -110,9 +132,8 @@ const App = () => {
         <link rel="icon" type="image/png" href="favicon.png" />
       </Head>
       <div
-        className="min-h-screen flex items-center fade-in"
+        className="min-h-screen flex items-center fade-in dot-bg bg-white dark:bg-black"
         style={{
-          backgroundImage: "url('bg.svg')",
           backgroundPosition: `${bgPosition.x}px ${bgPosition.y}px`
         }}
       >
@@ -142,7 +163,7 @@ const App = () => {
             </div>
           </div>
           <div className={`text-center ${showContent ? 'opacity-100 slideIn' : 'opacity-0'}`}>
-            <h1 className="text-5xl font-bold mb-2">{nameElements}</h1>
+            <h1 className="text-5xl font-bold mb-2 text-black dark:text-gray-200">{nameElements}</h1>
             <div className="relative" ref={modalRef}>
               <p
                 role="button"
@@ -183,6 +204,19 @@ const App = () => {
         {emojis.map(e => (
           <Emoji key={e.id} id={e.id} left={e.left} top={e.top} onDone={removeEmoji} />
         ))}
+        <button
+          type="button"
+          ref={themeRef}
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          aria-pressed={isDark}
+          onClick={toggleTheme}
+          style={{
+            translate: `${Math.round(themeTranslate.x * 10) / 10}px ${Math.round(themeTranslate.y * 10) / 10}px`
+          }}
+          className="fixed bottom-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-950 transition dark:bg-gray-950 dark:text-gray-100"
+        >
+          <FontAwesomeIcon icon={isDark ? faSun : faMoon} />
+        </button>
       </div>
     </div>
   );

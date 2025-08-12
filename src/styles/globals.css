@@ -8,6 +8,21 @@
     }
 }
 
+.dot-bg {
+    --dot-color: rgba(0, 0, 0, 0.15);
+    background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
+    background-size: 50px 50px;
+}
+
+.dark .dot-bg {
+    --dot-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Smooth theme color transitions when the helper class is present */
+.theme-transition, .theme-transition * {
+    transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease, fill 300ms ease, stroke 300ms ease;
+}
+
 .slideIn {
     animation: slideIn 0.5s ease-out;
 }
@@ -173,6 +188,17 @@
     background: #f2f2f2;
     border-left: 2px solid rgba(0, 0, 0, 0.05);
     border-top: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark .social-modal::before {
+    border-left: 2px solid rgba(255, 255, 255, 0.05);
+    border-top: 2px solid rgba(255, 255, 255, 0.05);
+    background: #111213;
+}
+
+.dark .social-modal {
+    background-color: #111213;
+    border: 2px solid rgba(255, 255, 255, 0.05);
 }
 
 .social-modal:hover {
