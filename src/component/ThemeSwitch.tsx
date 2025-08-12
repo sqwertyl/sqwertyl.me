@@ -43,7 +43,7 @@ const ThemeSwitch = forwardRef<HTMLButtonElement, ButtonProps>(function ThemeSwi
       ref={ref}
       aria-label={ariaLabel}
       onClick={cycleTheme}
-      className={`w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-950 transition dark:bg-gray-950 dark:text-gray-100 ${className ?? ''}`}
+      className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors bg-gray-100 text-gray-950 dark:bg-gray-950 dark:text-gray-100 ${className ?? ''}`}
       {...rest}
     >
       <span className={`${mounted ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>

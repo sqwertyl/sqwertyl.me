@@ -186,7 +186,7 @@ export default function HomePage() {
         ))}
         <ThemeSwitch
           ref={themeRef}
-          className="fixed bottom-4 right-4 z-50"
+          className="fixed bottom-4 right-4 z-50 cursor-pointer"
           style={{
             translate: `${Math.round(themeTranslate.x * 10) / 10}px ${Math.round(themeTranslate.y * 10) / 10}px`,
             willChange: 'translate',
