@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --color-muted: #718096;
+    --color-accent: rgb(156, 91, 202);
+    --color-surface: #f2f2f2;
+    --color-surface-dark: #111213;
+    --color-border-light: rgba(0, 0, 0, 0.05);
+    --color-border-dark: rgba(255, 255, 255, 0.05);
+    --color-label-bg: #4a5568;
+    --shadow-elevation-1: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    --transition-fast: 100ms;
+    --transition-normal: 200ms;
+    --transition-slow: 300ms;
+}
+
 @layer components {
     .social-link {
         @apply inline-block p-2 text-gray-600 hover:text-indigo-500 transition-all duration-200 ease-in-out;
@@ -20,7 +34,7 @@
 
 /* Smooth theme color transitions when the helper class is present */
 .theme-transition, .theme-transition * {
-    transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease, fill 300ms ease, stroke 300ms ease;
+    transition: color var(--transition-slow) ease, background-color var(--transition-slow) ease, border-color var(--transition-slow) ease, fill var(--transition-slow) ease, stroke var(--transition-slow) ease;
 }
 
 .slideIn {
@@ -51,7 +65,7 @@
     78%,
     100% {
         transform: translateY(0);
-        color: #718096
+        color: var(--color-muted);
     }
 
     42%,
@@ -69,7 +83,7 @@
     64%,
     74% {
         transform: scale(0.93);
-        color: rgb(156, 91, 202);
+        color: var(--color-accent);
     }
 }
 
@@ -97,7 +111,7 @@
 }
 
 .fade-in {
-    animation: fadeIn 0.5s ease-out
+    animation: fadeIn 0.5s ease-out;
 }
 
 .hop-animation {
@@ -106,7 +120,7 @@
 }
 
 .caption-text {
-    color: #718096;
+    color: var(--color-muted);
     transform: scale(1);
     translate: 0 0;
     transition: transform 0.12s ease, translate 0.12s ease;
@@ -134,26 +148,23 @@
 }
 
 .caption-text-clicked {
-    color: rgb(156, 91, 202);
+    color: var(--color-accent);
     transform: scale(0.99);
     translate: 0 -0.1rem;
     transition: transform 0.1s ease, translate 0.1s ease;
 }
 
 .profile-picture {
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    transition: transform 100ms ease;
+    box-shadow: var(--shadow-elevation-1);
+    transition: transform var(--transition-fast) ease;
     user-select: none;
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-touch-callout: none;
     -webkit-user-drag: none;
 }
 
 .profile-picture:hover {
     transform: scale(1.015);
-    transition: transform 100ms ease;
 }
 
 .pfp-pressed {
@@ -162,10 +173,10 @@
 
 /* Social modal styling */
 .social-modal {
-    background-color: #f2f2f2;
+    background-color: var(--color-surface);
     border-radius: 10px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-elevation-1);
+    border: 2px solid var(--color-border-light);
     padding: 0.5rem;
     display: flex;
     justify-content: space-around;
@@ -173,7 +184,7 @@
     pointer-events: none;
     transform: translate(0, 4px);
     opacity: 0;
-    transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    transition: transform var(--transition-normal) ease-in-out, opacity var(--transition-normal) ease-in-out;
     top: 140%;
 }
 
@@ -185,20 +196,20 @@
     transform: translateX(-50%) rotate(45deg);
     width: 12px;
     height: 12px;
-    background: #f2f2f2;
-    border-left: 2px solid rgba(0, 0, 0, 0.05);
-    border-top: 2px solid rgba(0, 0, 0, 0.05);
+    background: var(--color-surface);
+    border-left: 2px solid var(--color-border-light);
+    border-top: 2px solid var(--color-border-light);
 }
 
 .dark .social-modal::before {
-    border-left: 2px solid rgba(255, 255, 255, 0.05);
-    border-top: 2px solid rgba(255, 255, 255, 0.05);
-    background: #111213;
+    border-left: 2px solid var(--color-border-dark);
+    border-top: 2px solid var(--color-border-dark);
+    background: var(--color-surface-dark);
 }
 
 .dark .social-modal {
-    background-color: #111213;
-    border: 2px solid rgba(255, 255, 255, 0.05);
+    background-color: var(--color-surface-dark);
+    border: 2px solid var(--color-border-dark);
 }
 
 .social-modal:hover {
@@ -229,7 +240,7 @@
     top: 100%;
     left: 50%;
     transform: translateX(-50%) translateY(5px);
-    background-color: #4a5568;
+    background-color: var(--color-label-bg);
     color: white;
     padding: 2px 8px;
     border-radius: 4px;
@@ -255,15 +266,15 @@
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent transparent #4a5568 transparent;
+    border-color: transparent transparent var(--color-label-bg) transparent;
 }
 
-html {
+html, body {
     height: 100%;
     overflow: hidden;
 }
 
-body {
-    height: 100%;
-    overflow: hidden;
+/* When dark class is on root, advertise dark color scheme */
+.dark {
+    color-scheme: dark;
 }

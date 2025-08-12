@@ -78,5 +78,5 @@ export default function useTilt(
       }
       el.removeEventListener('transitionend', onTransitionEnd)
     }
-  }, [ref, easing])
+  }, [ref, easing, resetAfterMs, resetDurationMs])
 }
