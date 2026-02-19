@@ -70,9 +70,9 @@ export default function HomePage() {
   const pfpRef = useRef<HTMLImageElement | null>(null)
   const themeRef = useRef<HTMLButtonElement | null>(null)
   
-  const captionTranslate = useMagneticHover(captionRef, { maxPullX: 32, maxPullY: 20, easing: 0.6 })
-  const pfpTranslate = useMagneticHover(pfpRef, { maxPullX: 8, maxPullY: 8, easing: 0.12 })
-  const themeTranslate = useMagneticHover(themeRef, { maxPullX: 8, maxPullY: 8, easing: 0.15 })
+  const captionTranslate = useMagneticHover(captionRef, { maxPullX: 32, maxPullY: 16 })
+  const pfpTranslate = useMagneticHover(pfpRef, { maxPullX: 8, maxPullY: 8 })
+  const themeTranslate = useMagneticHover(themeRef, { maxPullX: 8, maxPullY: 8 })
   
   useOnClickOutside(modalRef, () => setModalOpen(false))
   useTilt(tiltRef)
@@ -126,6 +126,7 @@ export default function HomePage() {
               className="inline-block select-none"
               style={{
                 translate: `${Math.round(pfpTranslate.x * 10) / 10}px ${Math.round(pfpTranslate.y * 10) / 10}px`,
+                transition: 'translate 0.8s cubic-bezier(0.22, 1.2, 0.36, 1)',
               }}
             >
               <Image
@@ -160,6 +161,7 @@ export default function HomePage() {
                   translate: !modalOpen
                     ? `${Math.round(captionTranslate.x * 10) / 10}px ${Math.round(captionTranslate.y * 10) / 10}px`
                     : undefined,
+                  transition: 'translate 0.5s cubic-bezier(0.22, 1.4, 0.36, 1)',
                 }}
               >
                 <span className="caption-inner">@links</span>
@@ -189,7 +191,7 @@ export default function HomePage() {
           className="fixed bottom-4 right-4 z-50 cursor-pointer"
           style={{
             translate: `${Math.round(themeTranslate.x * 10) / 10}px ${Math.round(themeTranslate.y * 10) / 10}px`,
-            willChange: 'translate',
+            transition: 'translate 0.15s ease-out',
           }}
         />
 
